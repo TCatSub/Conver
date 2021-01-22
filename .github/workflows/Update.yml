@@ -9,18 +9,16 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v2
-    - name: Update
+    - name: Step 1 - Checkout
+      uses: actions/checkout@v2
+    - name: Step 2 - Build
       run: |
         rm -rf subconverter
         curl -LO https://github.com/tindy2013/subconverter/releases/latest/download/subconverter_linux64.tar.gz
         tar xvf subconverter_linux64.tar.gz
         mv -f subconverter/subconverter subconverter/subconverter.exe
         rm -f subconverter_linux64.tar.gz
-        git config --global user.name TCatSub
-        git checkout --orphan latest_branch
-        git add -A
-        git commit -am "Update"
-        git branch -D main
-        git branch -m main
-        git push -f origin main
+    - name: Step 3 - Release
+      uses: stefanzweifel/git-auto-commit-action@v4
+      with:
+        commit_message: Update
